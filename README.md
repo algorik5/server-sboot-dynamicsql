@@ -9,10 +9,22 @@
 # springboot starter
   - jpa
   - web
-  - oracle
+  - h2/-oracle
   - lombok
 
-# test
+# run
 - run springboot
+
+
+# swagger
 - http://localhost:18080/swagger-ui.html
-	
+
+# h2 console
+- http://localhost:18080/h2console
+  - jdbc:h2:D:\temp\h2db\h2testdb sa/sa
+  - create table ... insert ...
+  - SELECT * FROM PERSONS 
+  - show tables
+  - SELECT * FROM INFORMATION_SCHEMA.SCHEMATA 
+  - SELECT * FROM INFORMATION_SCHEMA.TABLES 
+

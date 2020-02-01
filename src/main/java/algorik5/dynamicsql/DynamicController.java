@@ -28,7 +28,7 @@ public class DynamicController {
 
 	 
 	 @GetMapping("/dynamicSelect")
-	 @CrossOrigin(origins = "http://localhost:4200")
+	 @CrossOrigin(origins = "http://localhost:4200")//show tables
 	 public List<Map<String,Object>> dynamicSelect(@RequestParam(required=false,defaultValue="select * from tab") String sql,@RequestParam(required=false,defaultValue="5") int rownum)
 	 {
 		 logger.info("======================= dynamicSelect START !! "+ "#rownum="+ rownum+ "#sql="+ sql);
