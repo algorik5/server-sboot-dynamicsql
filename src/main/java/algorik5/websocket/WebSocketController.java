@@ -33,7 +33,7 @@ public class WebSocketController {
 	Gson gson = new Gson();
 	long count = 0;
 	
-	@MessageMapping("/hello") //clent/hello
+	@MessageMapping("/hello") //toserver/hello
     //@SendTo("/server/hello") //convertAndSend사용
 	public void hello(@Payload String message) throws Exception {
 		count++;
@@ -42,19 +42,19 @@ public class WebSocketController {
 		map.put("reply","ok-"+ count);
 		Log.log("\t --- hello map # "+ map);
 		//if(1==1) throw new Exception("xxx");//에러생겨도 /topic/hello로 리턴됨
-		stomp.convertAndSend("/server/hello", gson.toJson(map));
+		stomp.convertAndSend("/toclient/hello", gson.toJson(map));
 	}
 
 	@Scheduled(fixedRate = 10000)
 	public void hellotimer() throws Exception {
 		count++;
-		Log.log("------------------- hellotimer start # ");
+		//Log.log("------------------- hellotimer start # ");
 		Map map = new LinkedHashMap();
 		map.put("count",count);
 		map.put("time",DateUtil.currentDate());
 		map.put("msg","timer");
-		Log.log("\t --- hello map # "+ map);
-		stomp.convertAndSend("/server/timer", gson.toJson(map));
+		Log.log("\t --- hellotimer map # "+ map);
+		stomp.convertAndSend("/toclient/timer", gson.toJson(map));
 	}
 	
 	
@@ -77,7 +77,7 @@ public class WebSocketController {
 		map.put("time",DateUtil.currentDate());
 		map.put("msg",msg);
 		String json = gson.toJson(map);
-		this.stomp.convertAndSend("/server/hello", json);//stomp send
+		this.stomp.convertAndSend("/toserver/hello", json);//stomp send
 	    return json;//rest리턴
 	}
 
