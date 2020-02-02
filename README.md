@@ -11,6 +11,7 @@
   - web
   - h2/-oracle
   - lombok
+  - websocket (stomp)
 
 # run
 - run springboot

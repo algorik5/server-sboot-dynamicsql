@@ -32,7 +32,7 @@ public class DynamicService {
 	@Autowired
 	EntityManager em;
 	
-	public List<Map<String,Object>> dynamicSelect(String sql,Map<String,Object> bindingMap)
+	public List<Map<String,Object>> dynamicSelect(String sql,Map<String,Object> bindingMap,int rownum)
 	{
 		 logger.info("\t===== dynamicSelect START!! "+ "#sql="+ sql+ "#bindingMap="+ bindingMap);
 		List<Map<String,Object>> result = new ArrayList<>();
@@ -41,6 +41,7 @@ public class DynamicService {
 //				.setParameter( "prefix", prefix)
 //				.getResultList();
 		Query query = em.createNativeQuery(sql, Tuple.class);
+		query.setMaxResults(rownum);
 		Iterator<String> it = bindingMap.keySet().iterator();
 		while(it.hasNext()) 
 		{

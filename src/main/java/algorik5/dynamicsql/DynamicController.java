@@ -35,7 +35,7 @@ public class DynamicController {
 		 
 		 Map<String,Object> bindingMap =  new LinkedHashMap<String, Object>();
 		 
-		 List<Map<String,Object>> result = dbService.dynamicSelect(sql,bindingMap);
+		 List<Map<String,Object>> result = dbService.dynamicSelect(sql,bindingMap,rownum);
 		 logger.info("======================= dynamicSelect START !! "+ "#rownum="+ rownum+ "#result="+ result.size());
 		 return result;
 	 }
