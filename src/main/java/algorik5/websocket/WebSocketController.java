@@ -55,9 +55,43 @@ public class WebSocketController {
 		map.put("msg","timer");
 		Log.log("\t --- hellotimer map # "+ map);
 		stomp.convertAndSend("/toclient/timer", gson.toJson(map));
+		
+		testappdata();
 	}
 	
-	
+	private void testappdata()
+	{
+		for(int i=0;i<3;i++)
+		{
+			String app = "app-"+i;
+			Map mapapp = new LinkedHashMap();
+			mapapp.put("app",app);
+			mapapp.put("ver","v-"+i);
+			mapapp.put("count",count);
+			mapapp.put("time",DateUtil.currentDate());
+			
+			Map mapgap = new LinkedHashMap();
+			mapgap.put("SRT",i);
+			mapgap.put("END",i);
+			mapgap.put("ERR",i);
+			
+			Map maptotal = new LinkedHashMap();
+			maptotal.put("SRT",i);
+			maptotal.put("END",i);
+			maptotal.put("ERR",i);
+			
+			Map map = new LinkedHashMap();
+			map.put("GAP",mapgap);
+			map.put("TOTAL",maptotal);
+			map.put("APP",mapapp);
+			
+			Log.log("\t --- testappdata map # "+ map);
+			stomp.convertAndSend("/toclient/appdata", gson.toJson(map));
+			//allmap.put(app, map);
+		}
+		//Log.log("\t --- testappdata allmap # "+ allmap);
+		//stomp.convertAndSend("/toclient/appdata", gson.toJson(allmap));
+	}
 	
 	
 	
