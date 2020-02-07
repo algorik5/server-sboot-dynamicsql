@@ -34,14 +34,14 @@ public class WebSocketController2 {
 	long count = 0;
 	
 	@MessageMapping("/hello") //toserver/hello
-    //@SendTo("/server/hello") //==>convertAndSend
+    //@SendTo("/server/hello") //convertAndSend사용
 	public void hello(@Payload String message) throws Exception {
 		count++;
 		Log.log("------------------- hello start # "+ message);
 		Map map = gson.fromJson(message, Map.class);
 		map.put("reply","ok-"+ count);
 		Log.log("\t --- hello map # "+ map);
-		//if(1==1) throw new Exception("xxx");//always reply ? 
+		//if(1==1) throw new Exception("xxx");//에러생겨도 /topic/hello로 리턴됨 
 		stomp.convertAndSend("/toclient/hello", gson.toJson(map));
 	}
 
@@ -64,6 +64,12 @@ public class WebSocketController2 {
 		for(int i=0;i<3;i++)
 		{
 			String app = "app-"+i;
+			Map mapapp = new LinkedHashMap();
+			mapapp.put("app",app);
+			mapapp.put("ver","v-"+i);
+			mapapp.put("count",count);
+			mapapp.put("time",DateUtil.currentDate());
+			
 			Map mapgap = new LinkedHashMap();
 			mapgap.put("SRT",i);
 			mapgap.put("END",i);
@@ -77,19 +83,7 @@ public class WebSocketController2 {
 			Map map = new LinkedHashMap();
 			map.put("GAP",mapgap);
 			map.put("TOTAL",maptotal);
-			
-			
-//			Map mapapp = new LinkedHashMap();
-//			mapapp.put("app",app);
-//			mapapp.put("ver","v-"+i);
-//			mapapp.put("count",count);
-//			mapapp.put("time",DateUtil.currentDate());
-//			map.put("APP",mapapp);
-			
-			map.put("app",app);
-			map.put("ver","v-"+i);
-			map.put("count",count);
-			map.put("time",DateUtil.currentDate());
+			map.put("APP",mapapp);
 			
 			Log.log("\t --- testappdata map # "+ map);
 			stomp.convertAndSend("/toclient/appdata", gson.toJson(map));
@@ -118,7 +112,7 @@ public class WebSocketController2 {
 		map.put("msg",msg);
 		String json = gson.toJson(map);
 		this.stomp.convertAndSend("/toserver/hello", json);//stomp send
-	    return json;//rest由ы꽩
+	    return json;//rest리턴
 	}
 
 	@MessageExceptionHandler
@@ -128,7 +122,7 @@ public class WebSocketController2 {
     public String handleException(Throwable exception) {
 		Log.log("------------------- handleException start # "+ exception);
 		exception.printStackTrace();
-		//紐낆떆�쟻�쑝濡� convertAndSend �빐�빞�븯�뒗 援�...
+		//명시적으로 convertAndSend 해야하는 군...
 		this.stomp.convertAndSend("/server/errors", exception.getMessage());
 	    return exception.getMessage();
     }
