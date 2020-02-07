@@ -25,7 +25,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 //@Controller
 @RestController
 @RequestMapping("/websocket")
-public class WebSocketController {
+public class WebSocketController2 {
 
 	@Autowired
 	private SimpMessagingTemplate stomp;//SimpMessageSendingOperations impl
@@ -41,7 +41,7 @@ public class WebSocketController {
 		Map map = gson.fromJson(message, Map.class);
 		map.put("reply","ok-"+ count);
 		Log.log("\t --- hello map # "+ map);
-		//if(1==1) throw new Exception("xxx");//에러생겨도 /topic/hello로 리턴됨
+		//if(1==1) throw new Exception("xxx");//에러생겨도 /topic/hello로 리턴됨 
 		stomp.convertAndSend("/toclient/hello", gson.toJson(map));
 	}
 
