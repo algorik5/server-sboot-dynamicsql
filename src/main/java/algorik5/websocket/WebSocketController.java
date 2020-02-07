@@ -1,5 +1,7 @@
 package algorik5.websocket;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,36 +63,58 @@ public class WebSocketController {
 	
 	private void testappdata()
 	{
+		List list = new ArrayList();
 		for(int i=0;i<3;i++)
 		{
-			String app = "app-"+i;
-			Map mapapp = new LinkedHashMap();
-			mapapp.put("app",app);
-			mapapp.put("ver","v-"+i);
-			mapapp.put("count",count);
-			mapapp.put("time",DateUtil.currentDate());
-			
-			Map mapgap = new LinkedHashMap();
-			mapgap.put("SRT",i);
-			mapgap.put("END",i);
-			mapgap.put("ERR",i);
-			
-			Map maptotal = new LinkedHashMap();
-			maptotal.put("SRT",i);
-			maptotal.put("END",i);
-			maptotal.put("ERR",i);
-			
-			Map map = new LinkedHashMap();
-			map.put("GAP",mapgap);
-			map.put("TOTAL",maptotal);
-			map.put("APP",mapapp);
-			
-			Log.log("\t --- testappdata map # "+ map);
+			Map map = sendGAP(i);
+			Log.log("\t --- GAP_DATA # "+ map);
 			stomp.convertAndSend("/toclient/appdata", gson.toJson(map));
-			//allmap.put(app, map);
+			
+			Map map2 = makeAGENT_PROCESS(i);
+			list.add(map2);
 		}
-		//Log.log("\t --- testappdata allmap # "+ allmap);
-		//stomp.convertAndSend("/toclient/appdata", gson.toJson(allmap));
+		
+		Map map = new LinkedHashMap();
+		map.put("_type_","PROCESS_DATA");
+		map.put("datas", list);
+		Log.log("\t --- PROCESS_DATA # "+ map);
+		stomp.convertAndSend("/toclient/appdata", gson.toJson(map));
+
+	}
+	private Map makeAGENT_PROCESS(int i)
+	{
+		Map map = new LinkedHashMap();
+		map.put("process",""+i);
+		map.put("host",""+i);
+		map.put("time",DateUtil.currentDate());
+		map.put("cpu",i);
+		map.put("memory",i);
+		return map;
+	}
+	private Map sendGAP(int i)
+	{
+		Map mapgap = new LinkedHashMap();
+		mapgap.put("SRT",i);
+		mapgap.put("END",i);
+		mapgap.put("ERR",i);
+		
+		Map maptotal = new LinkedHashMap();
+		maptotal.put("SRT",i);
+		maptotal.put("END",i);
+		maptotal.put("ERR",i);
+		
+		Map map = new LinkedHashMap();
+		map.put("GAP",mapgap);
+		map.put("TOTAL",maptotal);
+		
+		String app = "app-"+i;
+		map.put("app",app);
+		map.put("ver","v-"+i);
+		map.put("count",count);
+		map.put("time",DateUtil.currentDate());
+		
+		map.put("_type_","GAP_DATA");
+		return map;
 	}
 	
 	
