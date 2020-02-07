@@ -25,7 +25,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 //@Controller
 @RestController
 @RequestMapping("/websocket")
-public class WebSocketController2 {
+public class WebSocketController {
 
 	@Autowired
 	private SimpMessagingTemplate stomp;//SimpMessageSendingOperations impl
