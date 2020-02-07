@@ -84,26 +84,27 @@ public class WebSocketController {
 	private Map makeAGENT_PROCESS(int i)
 	{
 		Map map = new LinkedHashMap();
-		map.put("process",""+i);
-		map.put("host",""+i);
+		map.put("process","process-"+i);
+		map.put("host","host-"+i);
 		map.put("time",DateUtil.currentDate());
-		map.put("cpu",i);
-		map.put("memory",i);
+		map.put("cpu",i*2);
+		map.put("memory",i*3);
 		return map;
 	}
 	private Map sendGAP(int i)
 	{
 		Map mapgap = new LinkedHashMap();
 		mapgap.put("SRT",i);
-		mapgap.put("END",i);
-		mapgap.put("ERR",i);
+		mapgap.put("END",i+1);
+		mapgap.put("ERR",i+2);
 		
 		Map maptotal = new LinkedHashMap();
 		maptotal.put("SRT",i);
-		maptotal.put("END",i);
-		maptotal.put("ERR",i);
+		maptotal.put("END",i+10);
+		maptotal.put("ERR",i+20);
 		
 		Map map = new LinkedHashMap();
+		map.put("_type_","GAP_DATA");
 		map.put("GAP",mapgap);
 		map.put("TOTAL",maptotal);
 		
@@ -113,7 +114,6 @@ public class WebSocketController {
 		map.put("count",count);
 		map.put("time",DateUtil.currentDate());
 		
-		map.put("_type_","GAP_DATA");
 		return map;
 	}
 	
