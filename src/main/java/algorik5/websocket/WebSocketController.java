@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 
+import util.CountMap;
 import util.DateUtil;
 import util.Log;
 import org.springframework.messaging.simp.annotation.SendToUser;
@@ -45,6 +46,7 @@ public class WebSocketController {
 		Log.log("\t --- hello map # "+ map);
 		//if(1==1) throw new Exception("xxx");//에러생겨도 /topic/hello로 리턴됨 
 		stomp.convertAndSend("/toclient/hello", gson.toJson(map));
+		CountMap.addCount("hello",1);
 	}
 
 	@Scheduled(fixedRate = 10000)
@@ -55,8 +57,9 @@ public class WebSocketController {
 		map.put("count",count);
 		map.put("time",DateUtil.currentDate());
 		map.put("msg","timer");
-		Log.log("\t --- hellotimer map # "+ map);
 		stomp.convertAndSend("/toclient/timer", gson.toJson(map));
+		//Log.log("\t --- hellotimer map # "+ map);
+		CountMap.addCount("timer",1);
 		
 		testappdata();
 	}
@@ -67,9 +70,10 @@ public class WebSocketController {
 		for(int i=0;i<3;i++)
 		{
 			Map map = sendGAP(i);
-			Log.log("\t --- GAP_DATA # "+ map);
 			stomp.convertAndSend("/toclient/appdata", gson.toJson(map));
-			
+			//Log.log("\t --- GAP_DATA # "+ map);
+			CountMap.addCount("appdata/GAP",1);
+
 			Map map2 = makeAGENT_PROCESS(i);
 			list.add(map2);
 		}
@@ -77,8 +81,9 @@ public class WebSocketController {
 		Map map = new LinkedHashMap();
 		map.put("_type_","PROCESS_DATA");
 		map.put("datas", list);
-		Log.log("\t --- PROCESS_DATA # "+ map);
 		stomp.convertAndSend("/toclient/appdata", gson.toJson(map));
+		//Log.log("\t --- PROCESS_DATA # "+ map);
+		CountMap.addCount("appdata/PROC",1);
 
 	}
 	private Map makeAGENT_PROCESS(int i)
@@ -136,6 +141,7 @@ public class WebSocketController {
 		map.put("msg",msg);
 		String json = gson.toJson(map);
 		this.stomp.convertAndSend("/toserver/hello", json);//stomp send
+		CountMap.addCount("hellorest",1);
 	    return json;//rest리턴
 	}
 
@@ -148,6 +154,7 @@ public class WebSocketController {
 		exception.printStackTrace();
 		//명시적으로 convertAndSend 해야하는 군...
 		this.stomp.convertAndSend("/server/errors", exception.getMessage());
+		CountMap.addCount("errors",1);
 	    return exception.getMessage();
     }
 
