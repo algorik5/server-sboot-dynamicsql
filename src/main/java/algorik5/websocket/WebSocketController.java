@@ -79,7 +79,7 @@ public class WebSocketController {
 		}
 		
 		Map map = new LinkedHashMap();
-		map.put("_type_","PROCESS_DATA");
+		map.put("_type_","xx.xx.xx.xx.xx.PROCESS_DATA");
 		map.put("datas", list);
 		stomp.convertAndSend("/toclient/appdata", gson.toJson(map));
 		//Log.log("\t --- PROCESS_DATA # "+ map);
@@ -109,7 +109,7 @@ public class WebSocketController {
 		maptotal.put("ERR",i+20);
 		
 		Map map = new LinkedHashMap();
-		map.put("_type_","GAP_DATA");
+		map.put("_type_","xx.xx.xx.xx.xx.GAP_DATA");
 		map.put("GAP",mapgap);
 		map.put("TOTAL",maptotal);
 		
